@@ -1,11 +1,5 @@
 package de.dark.game;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Matrix4f;
@@ -18,8 +12,6 @@ import de.dark.engine.core.MathUtil;
 import de.dark.engine.render.Loader;
 import de.dark.engine.render.SkyboxRenderer;
 import de.dark.engine.render.StaticRenderer;
-import de.dark.engine.render.TexturedModel;
-import de.dark.engine.render.Entity;
 
 public class Main {
 	
@@ -43,15 +35,7 @@ public class Main {
 		Player player = new Player(new Vector3f(6, 0.45f, 7));
 		
 		Level level = LevelGenerator.createLevelFromFile("res/level/level1.png", "res/texture/tileset1.png", loader);
-		
-		/*
-		Map<TexturedModel, List<Entity>> entities = new HashMap<>();
-		entities.put(level.getTexturedModel(), Arrays.asList(
-				new Entity(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), 1.f)));
-		entities.put(LevelGenerator.createDoorModel(loader, "res/texture/door1.png"), Arrays.asList(
-				);
-		*/
-		
+				
 		AudioPlayer.init();
 		AudioPlayer.setListenerData();
 		int bfr = AudioPlayer.loadSound("res/audio/ambnt.wav");

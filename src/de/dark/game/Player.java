@@ -7,14 +7,13 @@ import org.lwjgl.util.vector.Vector3f;
 
 import de.dark.engine.core.DisplayManager;
 import de.dark.engine.render.Camera;
-import de.dark.engine.shader.StaticShader;
 
 public class Player {
 	private static final float SENSITIVITY = 0.28F; 
 	private static final Vector2f SCREEN_CENTER = new Vector2f(DisplayManager.WIDTH / 2, DisplayManager.HEIGHT / 2);
 	private static final float SPEED = 0.045F;
 	
-	private static final float PLAYER_SIZE = 0.2f;
+	private static final float PLAYER_SIZE = 0.28f;
 	
 	private Camera camera;
 	private Vector3f movVector;

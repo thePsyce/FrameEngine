@@ -36,4 +36,10 @@ public class Entity {
 	public void setScale(float scale) {
 		this.scale = scale;
 	}
+	
+	public void move(Vector3f amt) {
+		this.position.x += amt.x;
+		this.position.y += amt.y;
+		this.position.z += amt.z;
+	}
 }

@@ -15,7 +15,6 @@ import de.dark.engine.light.Light;
 import de.dark.engine.render.Entity;
 import de.dark.engine.render.GLTexture;
 import de.dark.engine.render.Loader;
-import de.dark.engine.render.RawModel;
 import de.dark.engine.render.TexturedModel;
 
 public class LevelGenerator {
@@ -49,9 +48,15 @@ public class LevelGenerator {
 			
 		for(int x=0; x<level.getWidth(); x++) {
 			for(int y=0; y<level.getHeight(); y++) {
+				if((level.getPixel(x, y) & 0xFFFFFF) == 0) {
+					continue;
+				}
+				
+				//Blue component
+				int col = ((level.getPixel(x, y) & 0x0000FF));
 				
 				//Green component
-				int texX = 255 / NUM_TEXTURES; 
+				int texX = ((level.getPixel(x, y) & 0x00FF00) >> 8) / NUM_TEXTURES; 
 				int texY = texX % NUM_TEX_EXP;
 				texX /= NUM_TEX_EXP;
 				
@@ -59,43 +64,6 @@ public class LevelGenerator {
 				float xLower = xHigher - 1.f/(float)NUM_TEX_EXP;
 				float yLower = 1.f - (float)texY/(float)NUM_TEX_EXP;
 				float yHigher = yLower - 1.f/(float)NUM_TEX_EXP;
-				
-				if((level.getPixel(x, y) & 0xFFFFFF) == 0) {
-					//Generate floor
-					indices.add((vertices.size() / 3) + 0);
-					indices.add((vertices.size() / 3) + 1);
-					indices.add((vertices.size() / 3) + 3);
-					indices.add((vertices.size() / 3) + 3);
-					indices.add((vertices.size() / 3) + 1);
-					indices.add((vertices.size() / 3) + 2);
-					
-					vertices.add(x * TILE_WIDTH); vertices.add(0.f); vertices.add(y * TILE_LENGTH);
-					vertices.add((x + 1) * TILE_WIDTH); vertices.add(0.f); vertices.add(y * TILE_LENGTH);
-					vertices.add((x + 1) * TILE_WIDTH); vertices.add(0.f); vertices.add((y + 1) * TILE_LENGTH);
-					vertices.add(x * TILE_WIDTH); vertices.add(0.f); vertices.add((y + 1) * TILE_LENGTH);
-					
-					texCoords.add(xLower); texCoords.add(yLower);
-					texCoords.add(xHigher); texCoords.add(yLower);
-					texCoords.add(xHigher); texCoords.add(yHigher);
-					texCoords.add(xLower); texCoords.add(yHigher);
-					
-					normals.add(0.f); normals.add(1.f); normals.add(0.f);
-					normals.add(0.f); normals.add(1.f); normals.add(0.f);
-					normals.add(0.f); normals.add(1.f); normals.add(0.f);
-					normals.add(0.f); normals.add(1.f); normals.add(0.f);
-					
-					continue;
-				}
-				
-				//Green component
-				texX = ((level.getPixel(x, y) & 0x00FF00) >> 8) / NUM_TEXTURES; 
-				texY = texX % NUM_TEX_EXP;
-				texX /= NUM_TEX_EXP;
-				
-				xHigher = 1.f - (float)texX/(float)NUM_TEX_EXP; 
-				xLower = xHigher - 1.f/(float)NUM_TEX_EXP;
-				yLower = 1.f - (float)texY/(float)NUM_TEX_EXP;
-				yHigher = yLower - 1.f/(float)NUM_TEX_EXP;
 			
 				//Generate floor
 				indices.add((vertices.size() / 3) + 0);
@@ -121,27 +89,29 @@ public class LevelGenerator {
 				normals.add(0.f); normals.add(1.f); normals.add(0.f);
 				
 				//Generate Ceiling
-				indices.add((vertices.size() / 3) + 0);
-				indices.add((vertices.size() / 3) + 1);
-				indices.add((vertices.size() / 3) + 3);
-				indices.add((vertices.size() / 3) + 3);
-				indices.add((vertices.size() / 3) + 1);
-				indices.add((vertices.size() / 3) + 2);
-				
-				vertices.add(x * TILE_WIDTH); vertices.add(TILE_HEIGHT); vertices.add(y * TILE_LENGTH);
-				vertices.add((x + 1) * TILE_WIDTH); vertices.add(TILE_HEIGHT); vertices.add(y * TILE_LENGTH);
-				vertices.add((x + 1) * TILE_WIDTH); vertices.add(TILE_HEIGHT); vertices.add((y + 1) * TILE_LENGTH);
-				vertices.add(x * TILE_WIDTH); vertices.add(TILE_HEIGHT); vertices.add((y + 1) * TILE_LENGTH);
-				
-				texCoords.add(xLower); texCoords.add(yLower);
-				texCoords.add(xHigher); texCoords.add(yLower);
-				texCoords.add(xHigher); texCoords.add(yHigher);
-				texCoords.add(xLower); texCoords.add(yHigher);
-				
-				normals.add(0.f); normals.add(-1.f); normals.add(0.f);
-				normals.add(0.f); normals.add(-1.f); normals.add(0.f);
-				normals.add(0.f); normals.add(-1.f); normals.add(0.f);
-				normals.add(0.f); normals.add(-1.f); normals.add(0.f);
+				if(col != 60) {
+					indices.add((vertices.size() / 3) + 0);
+					indices.add((vertices.size() / 3) + 1);
+					indices.add((vertices.size() / 3) + 3);
+					indices.add((vertices.size() / 3) + 3);
+					indices.add((vertices.size() / 3) + 1);
+					indices.add((vertices.size() / 3) + 2);
+					
+					vertices.add(x * TILE_WIDTH); vertices.add(TILE_HEIGHT); vertices.add(y * TILE_LENGTH);
+					vertices.add((x + 1) * TILE_WIDTH); vertices.add(TILE_HEIGHT); vertices.add(y * TILE_LENGTH);
+					vertices.add((x + 1) * TILE_WIDTH); vertices.add(TILE_HEIGHT); vertices.add((y + 1) * TILE_LENGTH);
+					vertices.add(x * TILE_WIDTH); vertices.add(TILE_HEIGHT); vertices.add((y + 1) * TILE_LENGTH);
+					
+					texCoords.add(xLower); texCoords.add(yLower);
+					texCoords.add(xHigher); texCoords.add(yLower);
+					texCoords.add(xHigher); texCoords.add(yHigher);
+					texCoords.add(xLower); texCoords.add(yHigher);
+					
+					normals.add(0.f); normals.add(-1.f); normals.add(0.f);
+					normals.add(0.f); normals.add(-1.f); normals.add(0.f);
+					normals.add(0.f); normals.add(-1.f); normals.add(0.f);
+					normals.add(0.f); normals.add(-1.f); normals.add(0.f);
+				}
 				
 				//Red component
 				texX = ((level.getPixel(x, y) & 0xFF0000) >> 16) / NUM_TEXTURES; 
@@ -247,17 +217,15 @@ public class LevelGenerator {
 					normals.add(-1.f); normals.add(0.f); normals.add(0.f);
 				}
 				
-				//Blue component
-				int col = ((level.getPixel(x, y) & 0x0000FF));
 				if(col == 10) {
 					lights.add(new Light(new Vector3f(x * TILE_WIDTH + (TILE_WIDTH / 2), 0.55f, y * TILE_LENGTH + (TILE_LENGTH / 2)), new Vector3f(1, 0.57f, 0.16f), 0.18f));
 				}
 				else if(col == 40) {
 					if((level.getPixel(x, y + 1) & 0xFFFFFF) == 0 && (level.getPixel(x, y - 1) & 0xFFFFFF) == 0) {
-						doors.add(new Entity(new Vector3f(x * TILE_WIDTH + (TILE_WIDTH / 2), 0, y * TILE_LENGTH), new Vector3f(0, 0, 0), 1.f));
+						doors.add(new Door(new Vector3f(x * TILE_WIDTH + (TILE_WIDTH / 2), 0, y * TILE_LENGTH), new Vector3f(0, 0, 0), 1.f, 0.01f));
 					}
 					else {
-						doors.add(new Entity(new Vector3f(x * TILE_WIDTH, 0, y * TILE_LENGTH + (TILE_LENGTH / 2)), new Vector3f(0, 90, 0), 1.f));
+						doors.add(new Door(new Vector3f(x * TILE_WIDTH, 0, y * TILE_LENGTH + (TILE_LENGTH / 2)), new Vector3f(0, 90, 0), 1.f, 0.01f));
 					}
 				}
 			}
